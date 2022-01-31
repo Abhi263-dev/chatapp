@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block sty %}
+<style>
+	.container {
+	margin: 0 auto;
+	width: 750px;
+	background: #444753;
+	border-radius: 5px;
+	}
+	.ulx {
+    height: 770px;
+	list-style-type:none;
+	}
+	.clearfix{
+      padding-bottom: 20px;
+
+    }
+	.chat {
+  	width: 100%;
+	float:left;
+	background: #F2F5F8;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	color: #434651;
+	}
+
+  .chat-header {
+    border-bottom: 2px solid white;
+  }
+
+    .chat-about {
+      float: left;
+      margin-top: 6px;
+    }
+
+    .chat-with {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .fa-star {
+      float: right;
+      color: #D8DADF;
+      font-size: 20px;
+      margin-top: 12px;
+    }
+
+  .chat-history {
+    border-bottom: 2px solid white;
+    overflow-y:scroll;
+	height: 500;
+  }
+
+    .message-data {
+      margin-bottom: 15px;
+    }
+
+    .message-data-time {
+      color: lighten(#434651, 8%);
+      padding-left: 6px;
+    }
+
+    .message {
+      color: white;
+      padding: 18px 20px;
+      line-height: 26px;
+      font-size: 16px;
+      border-radius: 7px;
+      margin-bottom: 30px;
+	  max-width: 50%;
+	 word-wrap:break-word;
+	}
+
+    .my-message {
+      background: rgb(109, 197, 109);
+    }
+
+    .other-message {
+      background: rgb(50, 152, 221);
+    }
+	.float-right {
+  float: right;
+}
+.float-left {
+  float: left;
+}
+
+
+    button {
+      float: right;
+      color: $blue;
+      font-size: 16px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background: #F2F5F8;
+
+      &:hover {
+        color: darken($blue, 7%);
+      }
+    }
+}
+
+</style>
+{% endblock %}
+{% block content %}
+	<div class="w3-row">
+		<!-- Blog entries -->
+		<div class="w3-col l3 s12  w3-black" style="height: 100%;">
+			<!-- Blog entry -->
+			<div class="w3-margin" >
+				{% for u in f1 %}
+				<p><a href="{% url 'chat:room' user=u.friend2__username%}">
+					{% if rec == u.friend2__username %} <b>{{u.friend2__username}}</b>
+					{% else %} {{u.friend2__username}}
+					{% endif %}
+				</a></p>
+				{% endfor %}
+				{% for u in f2 %}
+				<p><a href="{% url 'chat:room' user=u.friend1__username%}">
+				{% if rec == u.friend1__username %}	<b>{{u.friend1__username}}</b>
+				{% else %} {{u.friend1__username}}
+				{% endif %}
+				</a></p>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="w3-col l9 s12">
+			{% if username %}
+				<div class="chat">
+					<div class="chat-header clearfix">
+						<div class="row">
+							<div class="col-sm-1">
+								<img src="{{pic}}" style="width: 50; height: 50; border-radius: 50%; margin-left: 6; margin-top: 6;" />
+							</div>
+							<div class="col-sm-8 chat-about">
+								<div class="chat-with">{{rec}}</div>
+							</div>
+						</div>
+						<i class="fa fa-star"></i>
+					</div> <!-- end chat-header -->
+
+					<div class="chat-history" id="scrolldiv">
+						<ul class="ulx" id="chat-messages">
+							{% for m in messages %}
+							{% if username == m.sender.username %}
+							<li class="clearfix">
+								<div class="message-data text-right">
+									<span class="message-data-name">{{m.sender.username}}</span>
+									<span class="message-data-time">{{m.date_added}}</span>
+								</div>
+								<div class="message other-message float-right">
+									{{m.content}}
+								</div>
+
+
+							</li>
+							{% else %}
+							<li class="clearfix">
+								<div class="message-data">
+									<span class="message-data-name">{{m.sender.username}}</span>
+									<span class="message-data-time">{{m.date_added}}</span>
+
+								</div>
+								<div class="message my-message float-left">
+									{{m.content}}
+								</div>
+							</li>
+							{% endif %}
+							{% endfor %}
+						</ul>
+
+					</div>
+					 <!-- end chat-history -->
+
+					<div class="chat-message text-right clearfix">
+
+						<input name="message-to-send" id="chat-message-input" placeholder="Type your message" class="input" type="text"
+						style=" width: 90%; padding: 6px 12px; margin-right: 10px; box-sizing: border-box;"/>
+
+
+						<button class="btn btn-primary" id="chat-message-submit">Send</a>
+
+					</div> <!-- end chat-message -->
+
+				</div>
+			{% else %}
+				<img src="/media/bg/chat.png" width="20%" style="display:block; margin-left:auto; margin-right:auto; padding-top:20%;"/>
+			{%endif%}
+		</div>
+	</div>
+	{{ room_name|json_script:"json-roomname" }}
+	{{ username|json_script:"json-username" }}
+	<script>
+		var objDiv = document.getElementById("scrolldiv");
+		objDiv.scrollTop = objDiv.scrollHeight;
+		const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+		const userName = JSON.parse(document.getElementById('json-username').textContent);
+		const chatSocket = new WebSocket(
+			'ws://'
+			+ window.location.host
+			+ '/ws/'
+			+ roomName
+			+ '/'
+		);
+
+		chatSocket.onmessage = function (e) {
+			console.log('onMessage');
+		};
+
+		chatSocket.onclose = function (e) {
+			console.error('The socket closed unexpectedly');
+		};
+		chatSocket.onmessage = function (e) {
+			const data = JSON.parse(e.data);
+			if (data.message) {
+				var time = new Date();
+				var curr = time.toLocaleString('en-US', { month: "short", day: "2-digit", year: "numeric", hour: '2-digit', hour12: true, minute: "2-digit" });
+				if(data.username==userName){
+					document.querySelector('#chat-messages').innerHTML += ('<li class="clearfix"><div class="message-data text-right"><span class="message-data-name">' + data.username + '</span><span class="message-data-time">'+ curr.replace("AM", "a.m.").replace("PM", "p.m.")+'</span></div><div class="message other-message float-right">' + data.message + '</div></li>');
+				}
+				else{
+					document.querySelector('#chat-messages').innerHTML += ('<li class="clearfix"><div class="message-data"><span class="message-data-name">' + data.username + '</span><span class="message-data-time">' + curr.replace("AM", "a.m.").replace("PM", "p.m.") + '</span></div><div class="message my-message float-left">'+data.message+'</div></li>');
+				}
+				objDiv.scrollTop = objDiv.scrollHeight;
+			} else {
+				alert('The message was empty!')
+			}
+		};
+
+		document.querySelector('#chat-message-input').focus();
+		document.querySelector('#chat-message-input').onkeyup = function (e) {
+			if (e.keyCode === 13) {
+				document.querySelector('#chat-message-submit').click();
+			}
+		};
+
+		document.querySelector('#chat-message-submit').onclick = function (e) {
+			const messageInputDom = document.querySelector('#chat-message-input');
+			const message = messageInputDom.value;
+			if(message){
+				chatSocket.send(JSON.stringify({
+					'message': message,
+					'username': userName,
+					'room': roomName
+				}));
+			}
+			else{
+				alert('The message was empty!')
+			}
+
+			messageInputDom.value = '';
+		};
+	</script>
+{% endblock %}

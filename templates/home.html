@@ -1,0 +1,110 @@
+{%extends "base.html"%}
+{%block content%}
+
+<div class="w3-content" style="max-width:1400px">
+
+    <!-- Header -->
+    <header class="w3-container w3-center w3-padding-32">
+        <h1><b>PROFILE</b></h1>
+    </header>
+
+    <!-- Grid -->
+    <div class="w3-row">
+        <!-- Blog entries -->
+        <div class="w3-col l6 s12">
+            <div class="w3-card-4 w3-margin w3-white"><a href="{% url 'posts:createpost' %}"><span class="fa fa-plus-circle fa-4x"></span></a></div>
+            {% for post in posts %}
+            <!-- Blog entry -->
+            <div class="w3-card-4 w3-margin w3-white">
+                <div class="w3-row">
+                    <div class="w3-col m4 s12">
+                    <img src="{{post.picture.url}}" style="height: auto; width: 200; display: block; margin-left: auto; margin-right: auto;">
+                    </div>
+                    <div class="w3-col m8 ">
+                        <div class="w3-container">
+                            <h5><span class="w3-opacity">{{post.date_added}}</span></h5>
+                        </div>
+                        <div class="w3-container">
+                            <p>{{post.caption}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+
+        <!-- Introduction menu -->
+        <div class="w3-col l6">
+            <!-- About Card -->
+            <div class="w3-card w3-margin w3-margin-top">
+                <div class="w3-row">
+                    <div class="w3-col m8">
+                        <div class="w3-container w3-white">
+                            <h4><b>{{user.username}}</b></h4>
+                            <p>{{user.bio}}</p>
+                            <p><a href="{% url 'profiles:update' %}" class="w3-btn">Edit</a></p>
+                        </div>
+                    </div>
+                    <div class="w3-col m4 s12">
+                        <img src="{{user.photo.url}}" style="height: auto; width: 140; display: block; margin-left:auto; margin-right:auto;"/>
+                    </div>
+
+                </div>
+            </div>
+            <hr>
+            <div class="w3-card w3-margin">
+                <div class="w3-container w3-white">
+                    <p>
+                        <span class="w3-tag w3-black w3-margin-bottom">
+                            <a href="{% url 'profiles:friends' %}">Friends</a>
+                        </span>
+                        <span class="w3-tag w3-black w3-margin-bottom">
+                            <a href="{% url 'profiles:request' %}">Requests</a>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <!-- Posts -->
+
+            <!-- Labels / tags -->
+            <div class="w3-card w3-margin">
+                <div class="w3-container w3-padding">
+                    <h4><b>Interests</b></h4>
+                </div>
+                <div class="w3-container w3-white">
+                    <p>
+                    {%for i in in %}
+                        <span class="w3-tag w3-light-grey w3-margin-bottom">{{i.interest.name}}</span>
+                    {%endfor%}
+                    </p>
+                    <p><button onclick="document.getElementById('id01').style.display='block'" class="w3-btn">Add</button></p>
+
+                    <div id="id01" class="w3-modal">
+                        <div class="w3-modal-content">
+                            <div class="w3-container">
+                                <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn">&times;</span>
+                                <form method="POST" action="{% url 'profiles:interest' %}">
+                                    {% csrf_token %}
+                                    <div class="w3-row">
+                                    {% for checkbox in form.field %}
+                                        <div class="w3-col m2">{{checkbox}}</div>
+                                    {% endfor %}
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-primary">Add</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- END Introduction Menu -->
+        </div>
+
+        <!-- END GRID -->
+    </div><br>
+
+    <!-- END w3-content -->
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head>
+	{% block scripts %}
+	{% endblock %}
+	{% block sty %} {% endblock %}
+</head>
+<body>
+{%block nav%}
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color:black;">
+	<a class="navbar-brand" href="#"></a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+		aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			{% if user.is_authenticated %}
+			<li class="nav-item active">
+				<a class="nav-link" href="{% url 'profiles:home' %}">Home <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item active">
+				<a class="nav-link" href="{% url 'chat:room' %}">Chat</a>
+			</li>
+			<li class="nav-item active">
+				<a class="nav-link" href="{% url 'posts:listpost' %}">Explore</a>
+			</li>
+			<li class="nav-item active">
+				<a class="nav-link" href="{% url 'profiles:logout' %}">Logout</a>
+			</li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
+{%endblock%}
+
+{%block content%}
+{%endblock%}
+
+{%block footer%}
+
+{%endblock%}
+</body>

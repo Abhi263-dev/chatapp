@@ -1,0 +1,31 @@
+{% extends "base.html"%}
+
+{% block content %}
+	<header class="w3-container w3-center w3-padding-32">
+		<h1><b>FRIENDS</b></h1>
+	</header>
+	<div class="w3-row">
+		<!-- Blog entries -->
+		{% for friend in friends %}
+		<div class="w3-col l3 s12">
+			<div class="w3-card-4 w3-margin w3-white">
+				<div class="w3-row">
+					<div class="w3-col m4 s12">
+						<img src="/media/{{friend.pic}}" style="width: 50; height: 50; border-radius: 50%; margin-left: 6; margin-top: 6;" />
+					</div>
+					<div class="w3-col m8 s12">
+						<p><a href="{% url 'profiles:profile' un=friend.us%}"><h3><b>{{friend.us}}</b></h3></a></p>
+						{% if friend.bio %}
+						<p style="padding-right:20;">{{friend.bio|truncatechars:20}}</p>
+						{% else %}
+						<p>No bio</p>
+						{% endif %}
+						<p><a href="{% url 'profiles:unfriend' u=friend.us %}"><span class="w3-padding-large w3-right"><b>Unfriend</b></span></a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+{% endblock %}
