@@ -27,6 +27,9 @@ Project is created with:
 
 ## Illustrations
 
+<p align=center>
+  <img src="/Illustrations/1(1).jpeg" width="250" height="460">
+</p>
 
 
 
