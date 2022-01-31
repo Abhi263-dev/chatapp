@@ -28,7 +28,14 @@ Project is created with:
 ## Illustrations
 
 <p align=center>
-  <img src="/Illustrations/1 (1).jpeg" width="250" height="460">
+  <img src="/Illustrations/1 (1).jpeg">
+  <img src="/Illustrations/1 (2).jpeg">
+  <img src="/Illustrations/1 (3).jpeg">
+  <img src="/Illustrations/1 (4).jpeg">
+  <img src="/Illustrations/1 (5).jpeg">
+  <img src="/Illustrations/1 (6).jpeg">
+  <img src="/Illustrations/1 (7).jpeg">
+  <img src="/Illustrations/1 (8).jpeg">
 </p>
 
 
